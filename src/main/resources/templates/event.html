@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot Thymeleaf + Spring Security</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container"> 
+	<form action="#" th:action="@{/event}" th:object="${event}" method="post">
+		<div class="form-group">
+        	<label for="titulo">Título</label>
+        	<input type="text" class="form-control" id="titulo" placeholder="Título" th:field="*{eventTitle}" />
+        	<input type="hidden" id="id" th:field="*{id}" />
+        	<input type="hidden" name="acao" id="acao"/> 
+        	<input type="hidden" name="source" id="source" th:value="${source}"/>
+    	</div>  
+    	<div class="form-group">
+        	<label for="descricao">Descrição</label>
+        	<textarea class="form-control" id="descricao" rows="3" th:field="*{description}"></textarea>
+    	</div> 
+    	<div class="form-group">
+            <label for="initialDate">Horário:</label>
+            <div class="input-group input-group-sm" id="datetimepickerinit">
+                <input type="text" class="form-control" th:field="*{date}" id="initialDate" />
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+    	<div class="form-group" th:if="${event.id > 0}">
+        	<img th:src="@{'data:image/jpeg;base64,'+${qrcode}}" id="qrcode"/>
+    	</div>    	
+    	
+    	<div class="row" th:if="${event.id > 0}">
+    		<div class="col-sm-4">
+		      <button type="submit" class="btn btn-block btn-primary" id="cancelar">Cancelar</button>
+		    </div>
+		    <div class="col-sm-4" sec:authorize="hasRole('ROLE_ADMIN')">
+		      <button type="submit" class="btn btn-block btn-success" id="salvar">Salvar</button>
+		    </div>
+		    <div class="col-sm-4" sec:authorize="hasRole('ROLE_ADMIN')">
+		      <button type="submit" class="btn btn-block btn-danger" id="excluir">Excluir</button>
+		    </div>
+		</div>
+		<div class="row" th:unless="${event.id > 0}">
+    		<div class="col-sm-6">
+		      <button type="submit" class="btn btn-block btn-primary" id="cancelar">Cancelar</button>
+		    </div>
+		    <div class="col-sm-6" sec:authorize="hasRole('ROLE_ADMIN')">
+		      <button type="submit" class="btn btn-block btn-success" id="salvar">Salvar</button>
+		    </div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" th:inline="javascript">
+	$('#datetimepickerinit').datetimepicker({
+	    locale : 'pt-br',
+	    format : 'YYYY-MM-DD HH:mm:ss'
+	});
+	
+	$("#cancelar").click(function(evt) {
+		evt.preventDefault();
+		location.href="/event?source=" + /*[[${source}]]*/;
+		return false;
+	});
+	
+	$("#salvar").click(function(evt) {
+		$("#acao").val("salvar");
+		return true;
+	});
+	
+	$("#excluir").click(function(evt) {
+		$("#acao").val("excluir");
+		return true;
+	});
+</script>
+<!-- /.container -->
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

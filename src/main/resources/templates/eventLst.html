@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot Thymeleaf + Spring Security</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container"> 
+
+    <div class="starter-template">
+    	<div class="row">
+    		<div class="col-sm-6">
+    			<a th:href="@{/}" class="btn btn-block btn-primary" role="button" aria-disabled="true">Home</a>
+		    </div>
+    		<div class="col-sm-6" sec:authorize="hasRole('ROLE_ADMIN')">
+    			<a th:href="@{/event/0} + @{'?source='} + ${source}" class="btn btn-block btn-success" role="button" aria-disabled="true">Incluir</a>
+		    </div>
+		</div>
+    	<table id="clickToSort" class="table table-hover table-striped">                    
+	        <thead>
+	            <tr> 
+	                <th class="sort-arrows" id="icon-1"> Evento <i class="fa fa-fw fa-sort"></i></th>
+	                <th class="sort-arrows" id="icon-2"> Data <i class="fa fa-fw fa-sort"></i></th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <tr th:each="evt : ${eventLst}">
+	                <td><a th:href="@{'event/'} + ${evt.id} + @{'?source='} + ${source}" th:text="${evt.eventTitle}"></a></td>
+	                <td th:text="${evt.date}"></td>
+	            </tr>
+	        </tbody>
+	    </table>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

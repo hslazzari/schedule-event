@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot Thymeleaf + Spring Security</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container"> 
+
+    <div class="starter-template">
+        <h1>Agile</h1>
+        <h2 sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/event}">Eventos</a></h2>
+        <h2 sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/checkin}">Check-in</a></h2>
+        <h2 sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/event?source=next}">Próximos eventos</a></h2>
+        <h2 sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/myevents}">Minhas participações</a></h2>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>
